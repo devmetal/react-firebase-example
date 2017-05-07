@@ -1,8 +1,9 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { shallow} from 'enzyme';
 import sinon from 'sinon';
 import { Feed } from '../components';
 import moment from 'moment';
+
 
 const props = {
   items: [

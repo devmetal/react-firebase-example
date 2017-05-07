@@ -13,7 +13,6 @@ class FakeRef extends EventEmitter {
   };
 
   childChanged(data) {
-    console.log('I\'m fake');
     const child = {
       val() {
         return { ...data };
@@ -36,8 +35,7 @@ class FakeRef extends EventEmitter {
     this.removeAllListeners();
   };
 
-  push(data) {
-    console.log('i\'m fake');
+  sendMessage(data) {
     return new Promise(
       resolve => resolve(data)
     );

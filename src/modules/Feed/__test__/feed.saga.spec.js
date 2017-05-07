@@ -1,8 +1,10 @@
+jest.mock('../../../saga');
+
 import { all, takeEvery } from 'redux-saga/effects';
 import createSagaMiddleware from 'redux-saga'
 import  configureMockStore from 'redux-mock-store';
 import moment from 'moment';
-import { EventEmitter } from 'events';
+import { feedRef } from '../../../saga';
 
 import feed, { 
   feedChildAddedChannel,
@@ -13,43 +15,6 @@ import feed, {
   FEED_CHILD_REMOVED,
 } from '../feed.saga.js';
 
-class FakeRef extends EventEmitter {
-  childAdded(data) {
-    const child = {
-      val() {
-        return { ...data };
-      },
-      key: 'itemid',
-    };
-
-    this.emit('child_added', child);
-  }
-
-  childChanged(data) {
-    const child = {
-      val() {
-        return { ...data };
-      },
-      key: 'itemid',
-    };
-
-    this.emit('child_changed', child);
-  }
-
-  childRemoved(id) {
-    const child = {
-      key: id
-    };
-
-    this.emit('child_removed', child);
-  }
-
-  off() {
-    this.removeAllListeners();
-  }
-}
-
-const fakeRef = new FakeRef();
 const fakeTime = moment().toISOString();
 
 const itemFb = {
@@ -74,42 +39,42 @@ const itemExpected = {
 describe('feed saga', () => {
   describe('child_changed', () => {
     it('feed changed channel working', (done) => {
-      const chan = feedChildChangedChannel(fakeRef);
+      const chan = feedChildChangedChannel();
       
       chan.take((item) => {
         expect(item).toEqual(itemExpected);
         done();
       });
 
-      fakeRef.childChanged(itemFb);
+      feedRef.childChanged(itemFb);
       chan.close();
     })
   })
 
   describe('child_removed', () => {
     it('feed removed channel working', (done) => {
-      const chan = feedChildRemovedChannel(fakeRef);
+      const chan = feedChildRemovedChannel();
 
       chan.take((item) => {
         expect(item).toEqual({ id: 'itemid' });
         done();
       })
 
-      fakeRef.childRemoved('itemid');
+      feedRef.childRemoved('itemid');
       chan.close();
     })
   })
 
   describe('child_added', () => {
     it('feed child added channel working', (done) => {
-      const chan = feedChildAddedChannel(fakeRef);
+      const chan = feedChildAddedChannel();
 
       chan.take((item) => {
         expect(item).toEqual(itemExpected);
         done();
       });
 
-      fakeRef.childAdded(itemFb);
+      feedRef.childAdded(itemFb);
       chan.close();
     });
   });
@@ -128,7 +93,7 @@ describe('feed saga', () => {
     const testRoot = function *testRoot() {
       yield all([
         testWorker(),
-        feed(fakeRef),
+        feed(),
       ]);
     }
 
@@ -138,9 +103,9 @@ describe('feed saga', () => {
 
     sagaMiddleware.run(testRoot);
 
-    fakeRef.childAdded(itemFb);
-    fakeRef.childChanged(itemFb);
-    fakeRef.childRemoved('itemid');
+    feedRef.childAdded(itemFb);
+    feedRef.childChanged(itemFb);
+    feedRef.childRemoved('itemid');
 
     expect(addedSpy).toBeCalledWith({
       type: FEED_CHILD_ADDED,

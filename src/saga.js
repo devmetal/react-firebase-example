@@ -8,11 +8,15 @@ firebase.initializeApp(config);
 const database = firebase.database();
 export const feedRef = database.ref('/feed');
 
+feedRef.sendMessage = (message) => feedRef.push(message);
+
 // Saga-s all around application
 import feedSaga from './modules/Feed/feed.saga';
+import postSaga from './modules/Post/post.saga';
 
 export default function* root() {
   yield all([
-    feedSaga(feedRef)
+    feedSaga(),
+    postSaga(),
   ]);
 }
