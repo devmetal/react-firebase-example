@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Avatar = ({ src }) =>
-  <img className="avatar" src={src} alt="Avatar" />;
+const Avatar = ({ src }) => (
+  <div className="label">
+    <img className="avatar" src={src} alt="Avatar" />
+  </div>
+);
 
 Avatar.propTypes = {
   src: PropTypes.string.isRequired,

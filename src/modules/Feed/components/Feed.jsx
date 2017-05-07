@@ -20,8 +20,7 @@ class Feed extends Component {
   render() {
     const { items } = this.props;
     return (
-      <div className="feed">
-        <h1>Message Feed</h1>
+      <div className="ui segment feed">
         {items.map((item) => (
           <Item onHot={() => {}} key={item.id} {...item} />
         ))}

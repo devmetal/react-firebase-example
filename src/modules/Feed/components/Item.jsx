@@ -4,19 +4,21 @@ import Avatar from './Avatar';
 import Message from './Message';
 
 const Item = (props) => (
-  <div className="item">
-    <div className="item-head">
-      <Avatar src={props.user.avatar} />
-      <span>{props.user.email}</span>
-    </div>
-    <Message text={props.text} />
-    <div className="item-footer">
-      <button
-        className="hot"
-        onClick={() => props.onHot(props.id)}>
-        Hot!
-      </button>
-      <span>Created At: {props.created}</span>
+  <div className="item event">
+    <Avatar src={props.user.avatar} />
+    <div className="content">
+      <div className="summary">
+        <a>{props.user.email}</a> posted this message
+        <div className="date">
+          {props.created}
+        </div>
+      </div>
+      <Message text={props.text} />
+      <div className="meta">
+        <a className="hot like" onClick={() => props.onHot(props.id)}>
+          <i className="like icon"></i> Hot
+        </a>
+      </div>
     </div>
   </div>
 );

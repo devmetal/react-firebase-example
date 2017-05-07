@@ -31,7 +31,7 @@ export default (state = defaultState, action) => {
   const { type, payload } = action;
   switch (type) {
     case FEED_CHILD_ADDED:
-      return {...state, items: [...state.items, payload]};
+      return {...state, items: [payload, ...state.items]};
     case FEED_CHILD_REMOVED:
       return {...state, items: remove(state.items, payload.id)};
     case FEED_CHILD_CHANGED:
