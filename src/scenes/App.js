@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import Feed from './modules/Feed';
-import Post from './modules/Post';
+import Feed from '../modules/Feed';
+import Post from '../modules/Post';
 
-class App extends Component {
+class AppScene extends Component {
   render() {
     return (
       <div className="App">
@@ -23,4 +23,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default AppScene;

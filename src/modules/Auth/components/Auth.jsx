@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import './Auth.css';
+
 class Auth extends Component {
-  static propTypes ={
+  static propTypes = {
     onAuthFacebook: PropTypes.func.isRequired,
     onAuthGoogle: PropTypes.func.isRequired,
     onAuthTwitter: PropTypes.func.isRequired,
@@ -16,12 +18,26 @@ class Auth extends Component {
       onAuthTwitter
     } = this.props;
 
-    return ( 
-      <div className="auth">
-        <h1>Sign in</h1>
-        <button className="facebook" onClick={onAuthFacebook}>Facebook</button>
-        <button className="google" onClick={onAuthGoogle}>Google</button>
-        <button className="twitter" onClick={onAuthTwitter}>Twitter</button>
+    return (
+      <div className="ui segment auth">
+        <h4 className="ui header">
+          <i className="sign in icon"></i>
+          <div className="content">
+            Sign In!
+          </div>
+        </h4>
+        <button className="ui fluid facebook button" onClick={onAuthFacebook}>
+          <i className="facebook icon"></i>
+          Facebook
+        </button>
+        <button className="ui fluid google button" onClick={onAuthGoogle}>
+          <i className="google icon"></i>
+          Google
+        </button>
+        <button className="ui fluid twitter button" onClick={onAuthTwitter}>
+          <i className="twitter icon"></i>
+          Twitter
+        </button>
       </div>
     );
   }

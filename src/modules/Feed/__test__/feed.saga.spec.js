@@ -13,7 +13,7 @@ import feed, {
   FEED_CHILD_ADDED,
   FEED_CHILD_CHANGED,
   FEED_CHILD_REMOVED,
-} from '../feed.saga.js';
+} from '../feed.saga';
 
 const fakeTime = moment().toISOString();
 

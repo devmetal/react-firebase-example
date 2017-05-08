@@ -1,5 +1,33 @@
 import { EventEmitter } from 'events';
 
+class FakeAuth extends EventEmitter {
+  onAuthStateChanged(cb) {
+    this.on('authStateChanged', cb);
+    return () => this.removeAllListeners();
+  }
+
+  signOut() {
+    return new Promise((resolve) => {
+      resolve(this.simulateAuthStateChange(null));
+    })
+  }
+
+  simulateAuthStateChange(user) {
+    this.emit('authStateChanged', user);
+  }
+
+  signInWithPopup(provider) {
+    return Promise.resolve();
+  }
+
+  get fakeUser() {
+    return {
+      email: 'test@email.com',
+      photoURL: 'http://bit.ly/2pjf8sP',
+    };
+  }
+}
+
 class FakeRef extends EventEmitter {
   childAdded(data) {
     const child = {
@@ -43,3 +71,16 @@ class FakeRef extends EventEmitter {
 }
 
 export const feedRef = new FakeRef();
+export const auth = new FakeAuth();
+
+export const GoogleAuthProvider = () => {
+  return { name: 'Google' };
+}
+
+export const FacebookAuthProvider = () => {
+  return { name: 'Facebook' };
+}
+
+export const TwitterAuthProvider = () => {
+  return { name: 'Twitter' };
+}
