@@ -9,7 +9,7 @@ function* watchMessageRequest() {
 }
 
 export function* postMessage(action) {
-  yield call(feedRef.sendMessage, action.payload);
+  yield call([feedRef, feedRef.push], action.payload);
   yield put({ type: MESSAGE_SENT,  payload: action.payload});
 }
 

@@ -9,10 +9,7 @@ class PostContainer extends Component {
   handleSend = (text) => {
     // Demo payload before auth
     const created = moment().toISOString();
-    const user = {
-      email: 'test@domain.com',
-      avatar: 'http://bit.ly/2pjf8sP',
-    }
+    const { user } = this.props;
     const payload = { user, text, created };
     this.props.dispatch({ type: MESSAGE_REQUEST, payload });
   }
@@ -24,6 +21,7 @@ class PostContainer extends Component {
 
 const mapStateToProps = state => ({
   sent: state.post.sent,
+  user: state.auth.user,
 });
 
 export default connect(mapStateToProps)(PostContainer);

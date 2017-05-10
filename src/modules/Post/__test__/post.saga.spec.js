@@ -34,7 +34,7 @@ describe('Post Saga', () => {
   describe('postMessage saga', () => {
     it('calls firebase api for sending message', () => {
       expect(generator.next().value).toEqual(
-        call(feedRef.sendMessage, itemFb)
+        call([feedRef, feedRef.push], itemFb)
       );
 
       expect(generator.next().value).toEqual(

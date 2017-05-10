@@ -26,6 +26,10 @@ class FakeAuth extends EventEmitter {
       photoURL: 'http://bit.ly/2pjf8sP',
     };
   }
+
+  signIn(provider) {
+    return provider;
+  }
 }
 
 class FakeRef extends EventEmitter {
@@ -62,6 +66,10 @@ class FakeRef extends EventEmitter {
   off() {
     this.removeAllListeners();
   };
+
+  push(message) {
+    return Promise.resolve(message);
+  }
 
   sendMessage(data) {
     return new Promise(

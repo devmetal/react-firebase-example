@@ -1,45 +1,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import { BrowserRouter as Router } from 'react-router-dom';
 
-import {
-  BrowserRouter as Router,
-  Redirect,
-  Route,
-} from 'react-router-dom'
+import store from './store';
+
+import PrivateRoute from './PrivateRoute';
+import OnlyStrangers from './OnlyStrangers';
+import NeedPreload from './NeedPreload';
 
 import App from './scenes/App';
 import Auth from './scenes/Auth';
 
-import store from './store';
-
-const isAuthenticated = () => store.getState().auth.signed;
-
-const PrivateRoute = ({ component: Component, ...rest }) => (
-  <Route {...rest} render={props => (
-    isAuthenticated() ? (
-      <Component {...props} />
-    ) : (
-        <Redirect to={{
-          pathname: '/auth',
-          state: { from: props.location }
-        }} />
-      )
-  )} />
-)
-
-const Root = () => (
-  <Provider store={store}>
-    <Router>
-      <div>
-        <PrivateRoute exact path="/" component={App} />
-        <Route path="/auth" component={Auth} />
-      </div>
-    </Router>
-  </Provider>
-);
+const Routes = NeedPreload(() => (
+  <Router forceRefresh={true}>
+    <div>
+      <PrivateRoute exact path="/" component={App} />
+      <OnlyStrangers path="/auth" component={Auth} />
+    </div>
+  </Router>
+));
 
 ReactDOM.render(
-  <Root />,
+  <Provider store={store}>
+    <Routes />
+  </Provider>,
   document.getElementById('root')
 );

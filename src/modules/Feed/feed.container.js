@@ -2,10 +2,19 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Feed } from './components';
 
+import { FEED_ITEM_LIKE_REQUEST } from './feed.saga'; 
+
 class FeedContainer extends Component {
+  onHotHandler = (id) => {
+    this.props.dispatch({
+      type: FEED_ITEM_LIKE_REQUEST,
+      payload: { itemId: id },
+    });
+  }
+
   render() {
     const { items } = this.props;
-    return <Feed items={items} />
+    return <Feed onHot={this.onHotHandler} items={items} />
   }
 }
 

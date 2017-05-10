@@ -16,7 +16,7 @@ const Item = (props) => (
       <Message text={props.text} />
       <div className="meta">
         <a className="hot like" onClick={() => props.onHot(props.id)}>
-          <i className="like icon"></i> Hot
+          <i className="like icon"></i> Hot {(props.likes) ? Object.keys(props.likes).length: null}
         </a>
       </div>
     </div>
@@ -29,7 +29,7 @@ Item.propTypes = {
   text: PropTypes.string.isRequired,
   onHot: PropTypes.func.isRequired,
   user: PropTypes.shape({
-    email: PropTypes.string.isRequired,
+    email: PropTypes.string,
     avatar: PropTypes.string.isRequired,
   }),
 }

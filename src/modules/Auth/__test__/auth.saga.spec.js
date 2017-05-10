@@ -27,18 +27,22 @@ const fakeUser = {
 const expectedUser = {
   email: 'test@domain.com',
   avatar: 'avatar.src',
-  photoURL: 'avatar.src',
 };
 
 describe('Auth Saga', () => {
   it('authStateChangedChannel working', (done) => {
     const chan = authStateChangedChannel();
 
-    chan.take((state) => {
-      expect(state.user).toEqual(expectedUser);
+    chan.take((action) => {
+      expect(action).toEqual({
+        type: USER_SIGN_IN,
+        payload: expectedUser,
+      });
 
-      chan.take((state) => {
-        expect(state.user).toBeNull();
+      chan.take((action) => {
+        expect(action).toEqual({
+          type: USER_SIGN_OUT,
+        });
         done();
       })
     });
@@ -52,21 +56,21 @@ describe('Auth Saga', () => {
   it('authFacebook saga calls facebook auth from firebase', () => {
     const iterator = authFacebook();
     expect(iterator.next().value).toEqual(call(
-      auth.signInWithPopup, FacebookAuthProvider(),
+      auth.signIn, FacebookAuthProvider(),
     ));
   });
 
   it('authTwitter saga calls twitter auth from firebase', () => {
     const iterator = authTwitter();
     expect(iterator.next().value).toEqual(call(
-      auth.signInWithPopup, TwitterAuthProvider()
+      auth.signIn, TwitterAuthProvider()
     ));
   });
 
   it('authGoogle saga calls google auth from firebase', () => {
     const iterator = authGoogle();
     expect(iterator.next().value).toEqual(call(
-      auth.signInWithPopup, GoogleAuthProvider()
+      auth.signIn, GoogleAuthProvider()
     ));
   });
 

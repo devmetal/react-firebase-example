@@ -24,18 +24,18 @@ const items = (state = [], action) => {
   });
 }
 
-const remove = (state = [], id) => 
+const remove = (state = [], id) =>
   state.filter(item => item.id !== id);
 
 export default (state = defaultState, action) => {
   const { type, payload } = action;
   switch (type) {
     case FEED_CHILD_ADDED:
-      return {...state, items: [payload, ...state.items]};
+      return { ...state, items: [payload, ...state.items] };
     case FEED_CHILD_REMOVED:
-      return {...state, items: remove(state.items, payload.id)};
+      return { ...state, items: remove(state.items, payload.id) };
     case FEED_CHILD_CHANGED:
-      return {...state, items: items(state.items, action)};
+      return { ...state, items: items(state.items, action) };
     default:
       return state;
   }

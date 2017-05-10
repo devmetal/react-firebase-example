@@ -1,5 +1,5 @@
 import { eventChannel } from 'redux-saga';
-import { call, take, takeEvery, put, all } from 'redux-saga/effects';
+import { call, take, put, all } from 'redux-saga/effects';
 import {
   auth,
   GoogleAuthProvider,
@@ -9,31 +9,27 @@ import {
 
 export const USER_SIGN_IN = 'USER_SIGN_IN';
 export const USER_SIGN_OUT = 'USER_SIGN_OUT';
-export const AUTH_REQUEST = 'AUTH_REQUEST';
+export const AUTH_REQUEST_FB = 'AUTH_REQUEST_FB';
+export const AUTH_REQUEST_GL = 'AUTH_REQUEST_GL';
+export const AUTH_REQUEST_TWT = 'AUTH_REQUEST_TWT';
+export const SIGN_OUT_REQUEST = 'SIGN_OUT_REQUEST';
 
-export function authStateChangedChannel() {
-  return eventChannel((emitter) => {
-    return auth.onAuthStateChanged((user) => {
-      if (user) {
-        const mapped = { email: user.email, avatar: user.photoURL || '' };
-        emitter({ user: mapped });
-      } else {
-        emitter({ user: null });
-      }
-    });
-  })
-};
+export const authStateChangedChannel = () =>
+  eventChannel(emitter => auth.onAuthStateChanged((user) => {
+    if (user) {
+      const payload = { id: user.uid, email: user.email, avatar: user.photoURL || '' };
+      emitter({ type: USER_SIGN_IN, payload });
+    } else {
+      emitter({ type: USER_SIGN_OUT });
+    }
+  }));
 
 export function* authStateChanged() {
   try {
     const chan = yield call(authStateChangedChannel);
     while (true) {
-      const { user } = yield take(chan);
-      if (user) {
-        yield put({ type: USER_SIGN_IN, payload: user });
-      } else {
-        yield put({ type: USER_SIGN_OUT });
-      }
+      const action = yield take(chan);
+      yield put(action);
     }
   } finally {
     console.log('auth state change terminated');
@@ -55,36 +51,44 @@ export function* authTwitter() {
   yield call(auth.signIn, provider);
 }
 
-function* watchAuthRequest() {
-  while (true) {
-    const { provider } = yield take(AUTH_REQUEST);
-    switch (provider) {
-      case 'google':
-        yield call(authGoogle);
-        break;
-      case 'twitter':
-        yield call(authTwitter);
-        break;
-      case 'facebook':
-        yield call(authFacebook);
-        break;
-      default:
-        break;
-    }
+export function* signOut() {
+  yield call([auth, auth.signOut]);
+}
+
+function* watchTwitterAuthRequest() {
+  while(true) {
+    yield take(AUTH_REQUEST_TWT);
+    yield call(authTwitter);
   }
 }
 
-function* userSignedIn() {
-  yield takeEvery(USER_SIGN_IN, ({ payload }) => {
-    localStorage.setItem('signed', 'true');
-    localStorage.setItem('user', JSON.stringify(payload));
-  });
+function* watchGoogleAuthRequest() {
+  while(true) {
+    yield take(AUTH_REQUEST_GL);
+    yield call(authGoogle);
+  }
+}
+
+function* watchFacebookAuthRequest() {
+  while(true) {
+    yield take(AUTH_REQUEST_FB);
+    yield call(authFacebook);
+  }
+}
+
+function* watchSignOut() {
+  while(true) {
+    yield take(SIGN_OUT_REQUEST);
+    yield call(signOut);
+  }
 }
 
 export default function* authSaga() {
   yield all([
-    call(watchAuthRequest),
+    call(watchTwitterAuthRequest),
+    call(watchGoogleAuthRequest),
+    call(watchFacebookAuthRequest),
+    call(watchSignOut),
     call(authStateChanged),
-    call(userSignedIn),
   ]);
 }
