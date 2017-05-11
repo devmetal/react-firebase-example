@@ -1,5 +1,5 @@
 import { eventChannel } from 'redux-saga';
-import { call, take, put, all } from 'redux-saga/effects';
+import { call, take, takeEvery, put, all } from 'redux-saga/effects';
 import {
   auth,
   GoogleAuthProvider,
@@ -25,14 +25,10 @@ export const authStateChangedChannel = () =>
   }));
 
 export function* authStateChanged() {
-  try {
-    const chan = yield call(authStateChangedChannel);
-    while (true) {
-      const action = yield take(chan);
-      yield put(action);
-    }
-  } finally {
-    console.log('auth state change terminated');
+  const chan = yield call(authStateChangedChannel);
+  while (true) {
+    const action = yield take(chan);
+    yield put(action);
   }
 }
 
@@ -55,39 +51,19 @@ export function* signOut() {
   yield call([auth, auth.signOut]);
 }
 
-function* watchTwitterAuthRequest() {
-  while(true) {
-    yield take(AUTH_REQUEST_TWT);
-    yield call(authTwitter);
-  }
-}
-
-function* watchGoogleAuthRequest() {
-  while(true) {
-    yield take(AUTH_REQUEST_GL);
-    yield call(authGoogle);
-  }
-}
-
-function* watchFacebookAuthRequest() {
-  while(true) {
-    yield take(AUTH_REQUEST_FB);
-    yield call(authFacebook);
-  }
+function* watchAuthRequest() {
+  yield takeEvery(AUTH_REQUEST_FB, authFacebook);
+  yield takeEvery(AUTH_REQUEST_GL, authGoogle);
+  yield takeEvery(AUTH_REQUEST_TWT, authTwitter);
 }
 
 function* watchSignOut() {
-  while(true) {
-    yield take(SIGN_OUT_REQUEST);
-    yield call(signOut);
-  }
+  yield takeEvery(SIGN_OUT_REQUEST, signOut);
 }
 
 export default function* authSaga() {
   yield all([
-    call(watchTwitterAuthRequest),
-    call(watchGoogleAuthRequest),
-    call(watchFacebookAuthRequest),
+    call(watchAuthRequest),
     call(watchSignOut),
     call(authStateChanged),
   ]);
