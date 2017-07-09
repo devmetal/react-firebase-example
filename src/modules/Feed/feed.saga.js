@@ -1,6 +1,6 @@
 import { put, take, takeLatest, call, all, select } from 'redux-saga/effects';
 import { eventChannel } from 'redux-saga';
-import { feedRef, notiRef } from '../../saga';
+import { feedRef, api } from '../../saga';
 
 export const FEED_CHILD_ADDED = 'FEED_CHILD_ADDED';
 export const FEED_CHILD_CHANGED = 'FEED_CHILD_CHANGED';
@@ -82,19 +82,8 @@ function* watchLikeRequest() {
 
 function* likeFeedItem(action) {
   const { itemId } = action.payload;
-  const item = yield select(state => state.feed.items.find(item => item.id === itemId));
-  const user = yield select(state => state.auth.user);
-
-  const { likes } = item;
-  const author = item.user;
-  
-  if (!likes ||  !Object.values(likes).includes(user.id)) {
-    yield call(feedRef.likeItem, itemId, user.id);
-    yield call(notiRef.notifyUser, author.id, {
-      sender: user,
-      target: item,
-    });
-  }
+  const { id } = yield select(state => state.auth.user);
+  yield call(api.like, itemId, id);
 }
 
 export default function* feed() {

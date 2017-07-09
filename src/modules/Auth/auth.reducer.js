@@ -1,4 +1,4 @@
-import { USER_SIGN_IN, USER_SIGN_OUT } from './auth.saga';
+import { USER_SIGN_IN, USER_SIGN_OUT, GET_USER_LIKES } from './auth.saga';
 
 const defaultState = {
   user: null,
@@ -13,6 +13,8 @@ export default (state = defaultState, action) => {
       return { ...state, ready: true, signed: true, user: payload };
     case USER_SIGN_OUT:
       return { ...state, ready: true, signed: false, user: null };
+    case GET_USER_LIKES:
+      return {...state, likes: payload};
     default:
       return state;
   }

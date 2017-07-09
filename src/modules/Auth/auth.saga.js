@@ -1,10 +1,11 @@
 import { eventChannel } from 'redux-saga';
-import { call, take, takeEvery, put, all } from 'redux-saga/effects';
+import { call, take, takeEvery, put, all, select } from 'redux-saga/effects';
 import {
   auth,
   GoogleAuthProvider,
   FacebookAuthProvider,
   TwitterAuthProvider,
+  getUserLikes,
 } from '../../saga';
 
 export const USER_SIGN_IN = 'USER_SIGN_IN';
@@ -13,6 +14,7 @@ export const AUTH_REQUEST_FB = 'AUTH_REQUEST_FB';
 export const AUTH_REQUEST_GL = 'AUTH_REQUEST_GL';
 export const AUTH_REQUEST_TWT = 'AUTH_REQUEST_TWT';
 export const SIGN_OUT_REQUEST = 'SIGN_OUT_REQUEST';
+export const GET_USER_LIKES = 'GET_USER_LIKES';
 
 export const authStateChangedChannel = () =>
   eventChannel(emitter => auth.onAuthStateChanged((user) => {
@@ -59,6 +61,13 @@ function* watchAuthRequest() {
 
 function* watchSignOut() {
   yield takeEvery(SIGN_OUT_REQUEST, signOut);
+}
+
+function* getUserLikesSaga( ) {
+  yield take(USER_SIGN_IN);
+  const user = yield select(state => state.auth.user);
+  const likes = yield call(getUserLikes, user);
+  yield put({ type: GET_USER_LIKES, payload: likes });
 }
 
 export default function* authSaga() {
