@@ -40,12 +40,14 @@ export const TwitterAuthProvider = () => {
 export const getUserLikes = user =>
   likesRef.child(user.id).once('value');
 
+const prefix = process.env.API_PREFIX;
+
 const api = {
   like(itemId, userId) {
-    return axios.put('/api/like', { itemId, userId })
+    return axios.put(`${prefix}/like`, { itemId, userId })
   },
   fcm(token, userId) {
-    return axios.put('/api/fcmToken', { token, userId })
+    return axios.put(`${prefix}/fcmToken`, { token, userId })
   }
 }
 
