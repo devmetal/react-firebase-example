@@ -13,7 +13,12 @@ const Notification = ({ sender, id, onClick }) => (
 const AppBar = ({ onSignOut, onNotiReaded, notifications }) => (
   <div className="ui top menu">
     <div className="header item">
-      Firebase Demo Feed
+      <a
+        href="http://codingsans.com/"
+        rel="noopener noreferrer"
+        target="_blank">
+        Coding Sans
+      </a>
     </div>
     <div
       className="ui dropdown item"
