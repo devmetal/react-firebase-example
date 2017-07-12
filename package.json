@@ -15,7 +15,8 @@
     "react-router-dom": "^4.1.1",
     "redux": "^3.6.0",
     "redux-saga": "^0.15.3",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "reselect": "^3.0.1"
   },
   "devDependencies": {
     "enzyme": "^2.8.2",
@@ -33,7 +34,7 @@
   },
   "proxy": {
     "/api": {
-      "target": "https://us-central1-fir-demo-2d275.cloudfunctions.net",
+      "target": "https://us-central1-reactfirebasefeed.cloudfunctions.net/",
       "changeOrigin": true,
       "pathRewrite": {
         "^/api": ""

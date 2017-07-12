@@ -38,51 +38,11 @@ exports.storeUser = functions.auth.user().onCreate((event) => {
 });
 
 /**
- * Validation schema for like http requests
- */
-const likeSchema = joi.object().keys({
-  userId: joi.string().required(),
-  itemId: joi.string().required(),
-});
-
-/**
  * Validation schema for send token http requests
  */
 const fcmSchema = joi.object().keys({
   userId: joi.string().required(),
   token: joi.string().required(),
-});
-
-/**
- * like http endpoint
- */
-exports.like = functions.https.onRequest((req, res) => {
-  const { error } = joi.validate(req.body, likeSchema)
-  if (error !== null) {
-    return res.status(400).send('Bad Request');
-  }
-
-  const { userId, itemId } = req.body;
-
-  const likeRef = admin
-    .database()
-    .ref('/feed')
-    .child(itemId)
-    .child('likes')
-    .child(userId);
-
-  return co(function* () {
-    const like = yield likeRef.once('value');
-    if (like.exists()) {
-      throw new Error('Already liked');
-    }
-
-    yield likeRef.set(true);
-    return res.status(201).end();
-  }).catch(() => {
-    res.status(400)
-      .send('Bad Request');
-  });
 });
 
 /**

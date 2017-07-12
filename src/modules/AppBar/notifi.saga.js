@@ -1,6 +1,7 @@
 import { put, take, takeEvery, call, all, select } from 'redux-saga/effects';
 import { eventChannel } from 'redux-saga';
-import { notiRef, messaging, api } from '../../saga';
+import { notiRef, messaging } from '../../saga';
+import * as api from '../../api';
 
 import { USER_SIGN_IN } from '../Auth/auth.saga';
 

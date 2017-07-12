@@ -3,6 +3,10 @@
     "public": "build",
     "rewrites": [
       {
+        "source": "/api/fcmToken",
+        "function": "fcmToken"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }

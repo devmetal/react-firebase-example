@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+/**
+ * Router High Order Component for
+ * data preloading
+ */
 export default (Wrapped) => {
   class PreloadCmp extends Component {
     render() {

@@ -1,7 +1,6 @@
 import { all } from 'redux-saga/effects';
-import axios from 'axios';
-
 import * as firebase from 'firebase';
+
 import config from './firebase.config'
 
 // Saga-s all around application
@@ -20,11 +19,6 @@ export const likesRef = database.ref('/likes');
 export const auth = firebase.auth();
 export const messaging = firebase.messaging();
 
-messaging.onMessage(function(payload) {
-  console.log("Message received. ", payload);
-  // ...
-});
-
 export const GoogleAuthProvider = () => {
   return new firebase.auth.GoogleAuthProvider();
 }
@@ -37,32 +31,19 @@ export const TwitterAuthProvider = () => {
   return new firebase.auth.TwitterAuthProvider();
 }
 
-export const getUserLikes = user =>
-  likesRef.child(user.id).once('value');
-
-const prefix = process.env.API_PREFIX;
-
-const api = {
-  like(itemId, userId) {
-    return axios.put(`${prefix}/like`, { itemId, userId })
-  },
-  fcm(token, userId) {
-    return axios.put(`${prefix}/fcmToken`, { token, userId })
-  }
-}
-
-export { api };
-
 auth.signIn = (provider) => auth.signInWithPopup(provider);
-
-feedRef.sendMessage = (message) => feedRef.push(message);
-
-feedRef.likeItem = (id, userId) => feedRef.child(id).child('likes').push(userId);
 
 notiRef.notifyUser = (userId, noti) => notiRef.child(userId).push(noti);
 
 notiRef.removeNoti = (userId, notiId) => notiRef.child(userId).child(notiId).remove();
 
+feedRef.like = ({userId, itemId}) => feedRef
+  .child(itemId)
+  .child('likes')
+  .child(userId)
+  .set(true);
+
+// Root Saga
 export default function* root() {
   yield all([
     feedSaga(),

@@ -7,7 +7,6 @@ import { MESSAGE_REQUEST } from './post.saga';
 
 class PostContainer extends Component {
   handleSend = (text) => {
-    // Demo payload before auth
     const created = moment().toISOString();
     const { user } = this.props;
     const payload = { user, text, created };
@@ -20,7 +19,6 @@ class PostContainer extends Component {
 }
 
 const mapStateToProps = state => ({
-  sent: state.post.sent,
   user: state.auth.user,
 });
 

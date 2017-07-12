@@ -4,7 +4,7 @@ import Item from './Item';
 
 class Feed extends Component {
   static propTypes = {
-    onHot: PropTypes.func.isRequired,
+    onLike: PropTypes.func.isRequired,
     items: PropTypes.arrayOf(PropTypes.shape({
       created: PropTypes.string.isRequired,
       id: PropTypes.string.isRequired,
@@ -16,16 +16,12 @@ class Feed extends Component {
     })).isRequired,
   }
 
-  onHotHandler = (id) => {
-    this.props.onHot(id);
-  }
-
   render() {
-    const { items } = this.props;
+    const { items, onLike } = this.props;
     return (
       <div className="ui segment feed">
         {items.map((item) => (
-          <Item onHot={this.onHotHandler} key={item.id} {...item} />
+          <Item onLike={onLike} key={item.id} {...item} />
         ))}
       </div>
     );

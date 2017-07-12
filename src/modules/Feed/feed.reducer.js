@@ -2,6 +2,7 @@ import {
   FEED_CHILD_ADDED,
   FEED_CHILD_CHANGED,
   FEED_CHILD_REMOVED,
+  FEED_ITEM_LIKED,
 } from './feed.saga';
 
 const defaultState = {
@@ -18,6 +19,8 @@ const items = (state = [], action) => {
     switch (type) {
       case FEED_CHILD_CHANGED:
         return { ...item, ...payload };
+      case FEED_ITEM_LIKED:
+        return { ...item, likes: { ...item.likes, userId: true } };
       default:
         return item;
     }
@@ -35,6 +38,7 @@ export default (state = defaultState, action) => {
     case FEED_CHILD_REMOVED:
       return { ...state, items: remove(state.items, payload.id) };
     case FEED_CHILD_CHANGED:
+    case FEED_ITEM_LIKED:
       return { ...state, items: items(state.items, action) };
     default:
       return state;

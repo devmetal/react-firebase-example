@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { itemsMapLikes } from './feed.selector';
 import { Feed } from './components';
 
 import { FEED_ITEM_LIKE_REQUEST } from './feed.saga'; 
 
 class FeedContainer extends Component {
-  onHotHandler = (id) => {
+  onLikeHandler = (id) => {
     this.props.dispatch({
       type: FEED_ITEM_LIKE_REQUEST,
       payload: { itemId: id },
@@ -14,12 +15,12 @@ class FeedContainer extends Component {
 
   render() {
     const { items } = this.props;
-    return <Feed onHot={this.onHotHandler} items={items} />
+    return <Feed onLike={this.onLikeHandler} items={items} />
   }
 }
 
 const mapStateToProps = state => ({
-  items: state.feed.items,
+  items: itemsMapLikes(state),
 });
 
 export default connect(mapStateToProps)(FeedContainer);
