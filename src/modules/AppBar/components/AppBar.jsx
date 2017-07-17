@@ -10,7 +10,7 @@ const Notification = ({ sender, id, onClick }) => (
   </a>
 )
 
-const AppBar = ({ onSignOut, onNotiReaded, notifications }) => (
+const AppBar = ({ onSignOut, onNotiReaded, notifications, email }) => (
   <div className="ui top menu">
     <div className="header item">
       <a
@@ -40,7 +40,7 @@ const AppBar = ({ onSignOut, onNotiReaded, notifications }) => (
       className="item"
       onClick={onSignOut}
     >
-      Sign Out
+      ({email}) Sign Out
     </a>
   </div>
 );
@@ -49,6 +49,7 @@ AppBar.propTypes = {
   onSignOut: PropTypes.func.isRequired,
   onNotiReaded: PropTypes.func.isRequired,
   notifications: PropTypes.array.isRequired,
+  email: PropTypes.string,
 };
 
 export default AppBar;

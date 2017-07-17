@@ -29,6 +29,7 @@ class AppBarContainer extends Component {
         onNotiReaded={this.handleOnNotificationReaded}
         notifications={this.props.notifications}
         onSignOut={this.handleOnSignOut}
+        email={this.props.email}
       />
     );
   }
@@ -36,6 +37,7 @@ class AppBarContainer extends Component {
 
 const mapStateToProps = (state) => ({
   notifications: state.notifications.items,
+  email: state.auth.user.email,
 })
 
 export default connect(mapStateToProps)(AppBarContainer);
